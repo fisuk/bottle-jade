@@ -16,7 +16,11 @@ class ExtendCompiler(Compiler):
     def __init__(self, node, env, **options):
         super(ExtendCompiler, self).__init__(node, **options)
         self.env = env
-        self.blocks = {node.name: node for node in self.node.nodes if isinstance(node, CodeBlock)}
+        self.blocks = {}
+        for node in self.node.nodes:
+            if isinstance(node, CodeBlock):
+                self.blocks[node.name] = node
+
         while self.node.nodes and isinstance(self.node.nodes[0], Extends):
             compiler = self.env.get_template(self.node.nodes[0].path)
             self.node = compiler.node
